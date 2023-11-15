@@ -1,6 +1,7 @@
 buildscript {
   repositories {
     mavenCentral()
+    mavenLocal()
     maven {
       url 'https://plugins.gradle.org/m2/'
     }
@@ -10,11 +11,17 @@ buildscript {
   }
 }
 
+plugins {
+  id 'com.github.spotless-java' version '6.22.0'
+  id 'java'
+}
+
 group 'fr.thegreensuits'
+sourceCompatibility = '17'
 version '1.0'
 
 apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'java'
+apply from: rootProject.file('install-git-hooks.gradle')
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -46,4 +53,29 @@ dependencies {
 
   testImplementation group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
   testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
+}
+
+spotless {
+   format 'misc', {
+        target '*.gradle', '*.md', '.gitignore'
+
+        trimTrailingWhitespace()
+        indentWithSpaces(4)
+        endWithNewline()
+        setEncoding('utf-8')
+   }
+
+   java {
+        importOrder()
+        removeUnusedImports()
+
+        googleJavaFormat()
+
+        formatAnnotations()
+
+        trimTrailingWhitespace()
+        indentWithSpaces(4)
+        endWithNewline()
+        setEncoding('utf-8')
+   }
 }

@@ -1,0 +1,7 @@
+task installGitHooks(type: Copy) {
+   println 'Installing commit-msg Git hook in .git/hooks - hang tight!'
+   from new File(rootProject.rootDir, 'commit-msg')
+   into { new File(rootProject.rootDir, '.git/hooks') }
+}
+
+check.dependsOn installGitHooks
